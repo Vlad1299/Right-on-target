@@ -16,12 +16,39 @@ class ViewController: UIViewController {
     var round: Int = 1
     var points: Int = 0
     
+    lazy var secondViewController: SecondViewController = getSecondViewController()
+    
+    override func loadView() {
+        super.loadView()
+        print("loadView")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("View did load")
+        print("ViewDidLoad")
         number = Int.random(in: 1...50)
         label.text = String(self.number)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("ViewWillAppear")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("ViewDidAppear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("ViewWillDisappear")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("ViewDidDisappear")
     }
     
     @IBAction func checkNumber() {
@@ -57,5 +84,12 @@ class ViewController: UIViewController {
         number = Int.random(in: 1...50)
         label.text = String(number)
     }
+
+    private func getSecondViewController() -> SecondViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateViewController(identifier: "SecondViewController")
+        return viewController as! SecondViewController
+    }
+    
 }
 
