@@ -90,6 +90,5 @@ class ViewController: UIViewController {
         let viewController = storyboard.instantiateViewController(identifier: "SecondViewController")
         return viewController as! SecondViewController
     }
-    
 }
 
