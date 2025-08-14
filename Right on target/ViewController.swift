@@ -8,45 +8,63 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    // Сущность "Игра"
     var game: Game!
     
+    // Элементы на сцене
     @IBOutlet var slider: UISlider!
     @IBOutlet var label: UILabel!
     
+    // MARK: - Жизненный цикл
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        game = Game(startValue: 1, endValue: 50, rounds: 5)
-        updateLabelWithSecretNumber(newText: String(game.currentSecretValue))
+        // Создаем генератор случайных чисел
+        let generator = NumberGenerator(startValue: 1, endValue: 50)!
+        // Создаем сущность игра
+        game = Game(valueGenerator: generator, rounds: 5)
+        // Обновляем данные о текущем значении загаданного числа
+        updateLabelWithSecretNumber(newText: String(game.currentRound.currentSecretValue))
     }
-
+    
+    // MARK: - Взаимодействие View - Model
+    
+    // Проверка выбранного пользователем числа
     @IBAction func checkNumber() {
-        game.calculateScore(with: Int(slider.value))
-        
+        // Высчитываем очки за раунд
+        game.currentRound.calculateScore(with: Int(slider.value))
+        // Проверяем, окончена ли игра
         if game.isGameEnded {
+            // Показываем окно с итогами
             showAlertWith(score: game.score)
+            // Рестартуем игру
             game.restartGame()
         } else {
-            game.startRound()
+            // Начинаем новый раунд игры
+            game.startNewRound()
         }
-        updateLabelWithSecretNumber(newText: String(game.currentSecretValue))
+        // Обновляем данные о текущем значении загаданного числа
+        updateLabelWithSecretNumber(newText: String(game.currentRound.currentSecretValue))
     }
-
-    private func updateLabelWithSecretNumber(newText: String ) {
+    
+    // MARK: - Обновление View
+    
+    // Обновление текста загаданного числа
+    func updateLabelWithSecretNumber(newText: String ) {
         label.text = newText
     }
     
-    private func showAlertWith(score: Int) {
+    // Отображение всплывающего окна со счетом
+    private func showAlertWith( score: Int ) {
         let alert = UIAlertController(
-            title: "Game Over",
-            message: "Your score is \(score)",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(
-            title: "Start New Game",
-            style: .default,
-            handler: nil)
-        )
-        present(alert, animated: true)
+                        title: "Игра окончена",
+                        message: "Вы заработали \(score) очков",
+                        preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Начать заново", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
-}
 
+
+
+}
